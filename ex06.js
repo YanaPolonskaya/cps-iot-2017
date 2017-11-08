@@ -11,7 +11,13 @@ var board = new firmata.Board("/dev/ttyACM0", function(){ // ACM Abstract Contro
     console.log("Connecting to Arduino");
  
     console.log("Activation of Pin 13");
+    console.log("Activation of Pin 12");
+    console.log("Activation of Pin 8");
+    console.log("Activation of Pin 4");
     board.pinMode(13, board.MODES.OUTPUT); // Configures the specified pin to behave either as an input or an output.
+    board.pinMode(12, board.MODES.OUTPUT); 
+    board.pinMode(8, board.MODES.OUTPUT); 
+    board.pinMode(4, board.MODES.OUTPUT); 
 });
 
 function handler (req, res) {
@@ -50,6 +56,18 @@ io.sockets.on("connection", function(socket) {
         }
         if (commandNo == "3") {
             board.digitalWrite(8, board.HIGH); // write HIGH on pin 8
+        }        
+        if (commandNo == "4") {
+            board.digitalWrite(12, board.LOW); // write LOW on pin 13
+        }
+        if (commandNo == "5") {
+            board.digitalWrite(12, board.HIGH); // write HIGH on pin 13
+        }
+        if (commandNo == "6") {
+            board.digitalWrite(4, board.LOW); // write LOW on pin 8
+        }
+        if (commandNo == "7") {
+            board.digitalWrite(4, board.HIGH); // write HIGH on pin 8
         }        
     });
 

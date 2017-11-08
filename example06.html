@@ -29,7 +29,6 @@
 <script type="text/javascript">
 
 var socket1 = io.connect("172.16.22.53:8080"); // create socket1 - connect to it
-var socket2 = io.connect("172.16.22.224:8080"); // create socket2 - connect to it
 function on1 () {
     socket1.emit("commandToArduino", 1);
 }
@@ -47,19 +46,19 @@ function off2 () {
 }
  
 function on3 () {
-    socket2.emit("commandToArduino", 1);
+    socket1.emit("commandToArduino", 5);
 }
 
 function off3 () {
-    socket2.emit("commandToArduino", 0);
+    socket1.emit("commandToArduino", 4);
 }
 
 function on4 () {
-    socket2.emit("commandToArduino", 3);
+    socket1.emit("commandToArduino", 7);
 }
 
 function off4 () {
-    socket2.emit("commandToArduino", 2);
+    socket1.emit("commandToArduino", 6);
 }
 </script> 
 
