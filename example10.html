@@ -40,7 +40,9 @@ log(msg); // add msg
 socket.on("disconnect", function(){
 log("Disconnected from the server"); // we print status of disconn. to div
 });
-
+socket.on("clientReadValues", function(value) {
+    log(value.desiredValue);
+});
 </script>
 
 </body>
