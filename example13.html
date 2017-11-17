@@ -10,12 +10,7 @@
     
 <div>
 <canvas id="canvas1" width ="200" height = "100" style="border: 1px dashed #00c3c3;"></canvas>    
-</div>  
-
- <div>
-<canvas id="smile" width="200" height="200"></canvas>
-</div>
-
+</div>    
     
 <div id="print1"></div>    
 
@@ -27,7 +22,6 @@
 "use strict"; // in order to use clasess
 
 var divElement = document.getElementById("print1"); // var for div el.
-
 var numberOfLinesBeforeScroll = 10;
 var linesPrintCounter = 0;
 
@@ -38,9 +32,7 @@ var potValue2 = 0; // value of second potentiometer
 var x2 = new Array(); // array for x2 variable
 var y2 = new Array(); // array for y2 variable
 var canvas1;
-var ctx1;  
-var smile;
-var smile1;
+var ctx1;    
     
 function log(msg) {
     var node=document.createElement("tr"); // we create the variable node as the a table row (tr)
@@ -56,8 +48,7 @@ function log(msg) {
 function load() { // function that is started, when we open the page
     canvas1 = document.getElementById("canvas1");
     ctx1 = canvas1.getContext("2d");
-    smile = document.getElementById("smile");
-    smile1 = smile.getContext("2d");
+
     // initialization of graph with points
     ctx1.lineWidth = "1";
     ctx1.strokeStyle = "#ff0000";
@@ -78,10 +69,8 @@ function load() { // function that is started, when we open the page
 
 var socket = io.connect("172.16.22.53:8080"); // connect via socket
 
-socket.on("messageToClient", function (msg){
-
-
-
+socket.on("messageToClient", function (msg) {
+    log(msg); // adding message to div
 });
     
 socket.on("clientReadValues", function(value) {
@@ -111,27 +100,6 @@ socket.on("clientReadValues", function(value) {
     for (i=0; i<200; i++) {
         ctx1.lineTo(x2[i], (100 - (y2[i] / 1023) * 100)); // 0,0 x,y coordinate is in upper left corner
     };
-    
-    if (y1[199]<y2[199]){
-  smile1.fillStyle="green";
-  smile1.fillRect(10,10,400,200);
-}
-
-if (y1[199]==y2[199]){
-    
-smile1.fillStyle="blue";
-smile1.fillRect(10,10,400,200);
-    
-    
-}
-if (y1[199]>y2[199]){
-    
-smile1.fillStyle="red";
-smile1.fillRect(10,10,400,200);
-    
-    
-}
-
     ctx1.stroke(); // to draw the line
     // Draw second graph graph END ************************************    
     
