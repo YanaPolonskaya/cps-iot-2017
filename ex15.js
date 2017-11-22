@@ -5,6 +5,16 @@ var firmata = require("firmata");
 var controlAlgorihtmStartedFlag = 0; // flag in global scope to see weather ctrlAlg has been started
 var intervalCtrl; // var for setInterval in global space
 var pwm = 0;
+var Kp = 0.55; // proportional factor
+var Ki = 0.008; // integral factor
+var Kd = 0.15; // differential factor
+var pwm = 0;
+var pwmLimit = 254;
+
+var err = 0; // variable for second pid implementation
+var errSum = 0; // sum of errors
+var dErr = 0; // difference of error
+var lastErr = 0; // to keep the value of previous error
 console.log("Starting the code");
 
 var board = new firmata.Board("/dev/ttyACM0", function(){
@@ -19,7 +29,7 @@ board.pinMode(4, board.MODES.OUTPUT); // direction DC motor
 });
 
 function handler(req, res) {
-    fs.readFile(__dirname + "/example14.html",
+    fs.readFile(__dirname + "/example15.html",
     function (err, data) {
         if (err) {
             res.writeHead(500, {"Content-Type": "text/plain"});
@@ -62,18 +72,30 @@ board.on("ready", function() {
 
 
 
-function controlAlgorithm () {
+/*function controlAlgorithm () {
      pwm = factor*(desiredValue-actualValue);
     if(pwm > 255) {pwm = 255}; // to limit the value for pwm / positive
     if(pwm < -255) {pwm = -255}; // to limit the value for pwm / negative
     if (pwm > 0) {board.digitalWrite(2,1); board.digitalWrite(4,0);}; // določimo smer če je > 0
     if (pwm < 0) {board.digitalWrite(2,0); board.digitalWrite(4,1);}; // določimo smer če je < 0
     board.analogWrite(3, Math.abs(pwm));
+};*/
+function controlAlgorithm () {
+  err = desiredValue - actualValue; // error
+  errSum += err; // sum of errors, like integral
+  dErr = err - lastErr; // difference of error
+  pwm = Kp*err + Ki*errSum + Kd*dErr;
+  lastErr = err; // save the value for the next cycle
+  if(pwm > pwmLimit) {pwm = pwmLimit}; // to limit the value for pwm / positive
+  if(pwm < -pwmLimit) {pwm = -pwmLimit}; // to limit the value for pwm / negative
+  if (pwm > 0) {board.digitalWrite(2,1); board.digitalWrite(4,0);}; // določimo smer če je > 0
+  if (pwm < 0) {board.digitalWrite(2,0); board.digitalWrite(4,1);}; // določimo smer če je < 0
+  board.analogWrite(3, Math.abs(pwm));
 };
  function startControlAlgorithm () {
     if (controlAlgorihtmStartedFlag == 0) {
         controlAlgorihtmStartedFlag = 1; // set flag that the algorithm has started
-        intervalCtrl = setInterval(function() {controlAlgorithm(); }, 30); // na 30ms klic
+        intervalCtrl = setInterval(function() {controlAlgorithm(); }, 80); // na 30ms klic
         console.log("Control algorithm started");
     }
 };
