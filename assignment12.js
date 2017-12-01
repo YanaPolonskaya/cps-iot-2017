@@ -48,7 +48,7 @@ board.analogWrite(3, Math.round(Math.abs(pwm)));
 });
 
 function handler(req, res) {
-    fs.readFile(__dirname + "/assignment11.html",
+    fs.readFile(__dirname + "/assignment12.html",
     function (err, data) {
         if (err) {
             res.writeHead(500, {"Content-Type": "text/plain"});
@@ -115,6 +115,14 @@ board.on("ready", function() {
         sendStaticMsgViaSocket = function (value) {
         io.sockets.emit("staticMsgToClient", value);
         }
+
+socket.on("plus", function(){
+            pwm=pwm+5;
+        });
+
+socket.on("minus", function(){
+            pwm=pwm-5;
+        });
 
 
     }); // end of sockets.on connection
